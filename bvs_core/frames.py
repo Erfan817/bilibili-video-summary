@@ -13,11 +13,10 @@ import json
 import os
 import sys
 
-import numpy as np
-import av
-from PIL import Image
-
 from . import bili
+
+# numpy / av / Pillow 是重依赖且只在抽帧时才用到 —— 惰性导入,
+# 让 `bvs --help` / `--version` / 链接解析在没装它们的环境也能跑(CI 单测环境)。
 
 
 def build_args(argv=None):
@@ -35,7 +34,7 @@ def build_args(argv=None):
     return p.parse_args(argv)
 
 
-def _sig(img):
+def _sig(img, np):
     return np.asarray(img.convert('L').resize((64, 64)), dtype=np.float32)
 
 
@@ -47,6 +46,11 @@ def extract_frames(base, mode='scene', max_frames=60, dense_interval=8.0,
     产出 <base>/frames/*.jpg + <base>/frames_index.txt。
     返回候选帧列表。
     """
+    # 惰性导入: 只有真正抽帧时才需要 numpy / av / Pillow
+    import numpy as np
+    import av
+    from PIL import Image
+
     vpath = os.path.join(base, 'video.m4s')
     if not os.path.exists(vpath):
         pj = os.path.join(base, 'playurl.json')
@@ -99,7 +103,7 @@ def extract_frames(base, mode='scene', max_frames=60, dense_interval=8.0,
             continue
         last_t = t
         img = frame.to_image()
-        s = _sig(img)
+        s = _sig(img, np)
         if last_sig is None:
             mae, ratio, keep = 999.0, 1.0, True
         else:

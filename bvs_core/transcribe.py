@@ -11,7 +11,8 @@ import os
 import sys
 import time
 
-from faster_whisper import WhisperModel
+# faster-whisper 是重依赖且只在真正转写时才用到 —— 惰性导入,
+# 让 `bvs --help` / `--version` / 链接解析在没装它的环境也能跑(CI 单测环境)。
 
 # 模型目录: 优先读环境变量 WHISPER_MODEL_DIR; 留空回退模型名 'small'
 # (Windows 上 HF 自动下载会拿到 0 字节软链, 建议手动落盘后指过来)
@@ -50,6 +51,7 @@ def transcribe_audio(audio_path, topic='', lang='zh', model=DEFAULT_MODEL,
     t0 = time.time()
     model = model or DEFAULT_MODEL
     log('loading model: %s ...' % model, flush=True)
+    from faster_whisper import WhisperModel  # 惰性导入
     model = WhisperModel(model, device='cpu', compute_type='int8',
                          cpu_threads=threads or _threads())
     log('model ready in %.1fs' % (time.time() - t0), flush=True)
