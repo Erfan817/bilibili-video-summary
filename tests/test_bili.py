@@ -1,8 +1,9 @@
-"""bvs_core.bili 单元测试(纯 stdlib, 无网络)。"""
+"""bvs_core.bili 单元测试(纯 stdlib, 无网络 —— 网络依赖的路径用 mock)。"""
 import os
 import sys
 import tempfile
 import unittest
+from unittest import mock
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -30,8 +31,14 @@ class TestParseLink(unittest.TestCase):
         self.assertEqual(r['page'], 3)
 
     def test_bv_with_query(self):
-        r = bili.parse_link('https://b23.tv/BV1xx411c7mD?share_medium=android')
-        self.assertTrue(r['bvid'] or r['url'])
+        # b23.tv 短链要跟随 302 —— 单测里用 mock 代替真实网络(CI 里 B 站会 412)
+        fake = mock.Mock()
+        fake.geturl.return_value = (
+            'https://www.bilibili.com/video/BV1xx411c7mD/?share_medium=android')
+        with mock.patch('urllib.request.urlopen', return_value=fake):
+            r = bili.parse_link('https://b23.tv/BV1xx411c7mD?share_medium=android')
+        self.assertEqual(r['bvid'], 'BV1xx411c7mD')
+        self.assertEqual(r['page'], 1)
 
     def test_external_url(self):
         r = bili.parse_link('https://www.youtube.com/watch?v=abc123')
