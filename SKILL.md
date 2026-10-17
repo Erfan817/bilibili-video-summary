@@ -6,6 +6,24 @@ agent_created: true
 
 # B 站视频转写与总结
 
+## 一键 CLI(不想用 agent 时的替代路径)
+
+本技能同时提供 CLI 封装 —— 全链路一条命令, 不需要 agent 也能出 transcript:
+
+```bash
+bvs <BV链接>                          # 出 transcript.txt + summary.md/json
+bvs <链接> --srt --topic "主题关键词"   # 加 SRT + 术语提示
+bvs <链接> --frames --frames-mode dense  # 课件类: 加画面模式
+```
+
+| 场景 | 用什么 |
+|---|---|
+| 只要逐句稿 / SRT | **`bvs` CLI**(快, 无需 agent) |
+| 要「结论先行的结构化总结」+ 读图融合 | **本技能流程**(下面步骤) |
+
+CLI 也会自动做同音字校正(`high` 项自动替换, `context` 项列审查清单), 规则表在
+`bvs_core/corrections.json`。分工: CLI 出素材, agent 出结论。
+
 ## 为什么不走字幕接口
 
 `api.bilibili.com/x/player/v2` 返回的 `subtitle.subtitles` 现在**几乎都是空数组**(`need_login_subtitle: true`)——AI 字幕需登录 cookie。评论接口 `/x/v2/reply` 也已要求 wbi 签名,裸调返回 `code -400`。
@@ -36,8 +54,11 @@ agent_created: true
 | 脚本 | 用法 |
 |---|---|
 | `scripts/fetch_media.py` | `<工作目录> [audio\|video\|both]` —— 下载音视频流 |
-| `scripts/transcribe.py` | `<工作目录> "<视频主题>" [语言]` —— 本地 Whisper 转写 |
+| `scripts/transcribe.py` | `<工作目录> "<视频主题>" [语言] [--srt]` —— 本地 Whisper 转写 |
 | `scripts/extract_frames.py` | `<工作目录> [--mode dense\|scene] [--max-frames N] ...` —— 抽帧 |
+
+> 脚本是 `bvs_core/` 的薄封装。需要 cookie 时设环境变量 `BILI_COOKIE`(cookies.txt 路径或
+> `SESSDATA=..` 字符串)即可解锁高清流。同音字校正规则表在 `bvs_core/corrections.json`。
 
 ### 全流程速查
 
@@ -151,6 +172,14 @@ Whisper 对中文学术人名的识别同样错得很有规律。遇到这类视
 | 莫過於 | 莫过于 |
 
 > **重要**:机械替换容易误伤——"奇异"在数学语境下本来就对,"权势"在其他语境也可能是对的。**必须逐句结合上下文判断**,不能无脑全局替换。做法:先按表批量替换,再通读一遍做修正。
+
+> **机器可读版**:同样的规则以 JSON 形式放在 `bvs_core/corrections.json`,按
+> `confidence` 分级(`high` = 可自动替换, `context` = 只标记不替换)。新增词条直接 PR 那个
+> 文件即可, 不必同时改本文档; 本文档保留给人看的完整说明。
+
+> **繁→简归一**:Whisper 中文转写常混出繁体字(实测「打電話 / 報喜不報憂」),`bvs`
+> 和 `python -m bvs_core.correct` 会在装了 `zhconv`(纯 Python, 随依赖一起装)时
+> 自动归一, 没装则在检出繁体时提示。已有正常简体内容不受影响。
 
 ## 转写耗时参考(8 线程 CPU / int8 / small)
 

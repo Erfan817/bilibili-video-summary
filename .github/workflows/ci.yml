@@ -1,0 +1,51 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      # 单元测试只依赖标准库, 所以不装 faster-whisper(体积大), 保持 CI 快
+      - name: Run unit tests
+        run: python -m unittest discover -s tests -v
+
+      - name: Byte-compile all sources
+        run: python -m compileall -q bvs_core bvs.py mcp_server.py scripts
+
+      - name: CLI smoke test (help / version / bad arg)
+        run: |
+          python bvs.py --help
+          python bvs.py --version
+          python -c "
+          import sys; sys.argv=['bvs','--version']
+          from bvs_core import bili
+          assert bili.parse_link('BV1xx411c7mD')['bvid'] == 'BV1xx411c7mD'
+          assert bili.parse_link('https://www.bilibili.com/video/BV1xx411c7mD/?p=3')['page'] == 3
+          print('parse_link ok')
+          "
+
+      - name: Validate corrections.json
+        run: |
+          python -c "
+          import json
+          d = json.load(open('bvs_core/corrections.json', encoding='utf-8'))
+          n = sum(len(c['corrections']) for c in d['categories'])
+          assert n > 0, 'empty corrections table'
+          for c in d['categories']:
+              for e in c['corrections']:
+                  assert e.get('from') and e.get('to'), e
+                  assert e.get('confidence') in ('high', 'context'), e
+          print('corrections.json ok:', n, 'entries')
+          "

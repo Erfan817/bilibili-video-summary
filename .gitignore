@@ -4,13 +4,24 @@ __pycache__/
 *.egg-info/
 .venv/
 venv/
+build/
+dist/
 
-# 运行产物（技能只存代码和文档，媒体文件属于一次性中间产物）
+# 运行产物（技能/CLI 只存代码和文档，媒体文件属于一次性中间产物）
 *.m4s
 frames/
 frames_index.txt
 audio.*
 video.*
+
+# CLI 默认输出目录
+outputs/
+.work/
+
+# 凭据：cookie 文件绝对不要提交
+cookies.txt
+*.cookies.txt
+.env
 
 # 系统
 .DS_Store

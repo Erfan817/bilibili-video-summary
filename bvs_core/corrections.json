@@ -1,0 +1,63 @@
+{
+  "version": 1,
+  "note": "同音字校正表 —— 欢迎 PR 补充。Whisper 对中文的误识别很有规律; 本表只记录'错得稳定'的条目。confidence=high 的条目由 bvs.py 自动替换; confidence=context 的条目只列进审查清单, 由人/AI 逐句判断。新增条目请保持按拼音排序, 便于 review。",
+  "categories": [
+    {
+      "id": "computer",
+      "label": "计算机 / 求职类黑话",
+      "corrections": [
+        {"from": ["双飞", "双肥"], "to": "双非", "confidence": "high", "note": "计算机求职黑话"},
+        {"from": ["加瓦"], "to": "Java", "confidence": "high", "note": "编程语言"},
+        {"from": ["运为"], "to": "运维", "confidence": "high", "note": "岗位"},
+        {"from": ["既往"], "to": "计网", "confidence": "high", "note": "计算机网络"},
+        {"from": ["考工", "考供", "靠工"], "to": "考公", "confidence": "high", "note": "公务员考试"},
+        {"from": ["审考"], "to": "省考", "confidence": "high", "note": "公务员考试"},
+        {"from": ["求招"], "to": "秋招", "confidence": "high", "note": "秋季招聘"},
+        {"from": ["硬接生", "应接生"], "to": "应届生", "confidence": "high", "note": "求职"},
+        {"from": ["事业边"], "to": "事业编", "confidence": "high", "note": "编制"},
+        {"from": ["九二"], "to": "985/211", "confidence": "context", "note": "需看上下文"},
+        {"from": ["二三本", "二文", "23本"], "to": "二本三本", "confidence": "high", "note": "高校层次"},
+        {"from": ["大產"], "to": "大厂", "confidence": "high", "note": "互联网公司"},
+        {"from": ["卷金"], "to": "卷进", "confidence": "context", "note": "需看上下文"},
+        {"from": ["研炒电网"], "to": "烟草、电网", "confidence": "context", "note": "国企, 需看上下文"},
+        {"from": ["贵源"], "to": "柜员", "confidence": "high", "note": "银行岗位"},
+        {"from": ["新制高"], "to": "薪资高", "confidence": "context", "note": "需看上下文"},
+        {"from": ["江泽广"], "to": "江浙广", "confidence": "high", "note": "地域"},
+        {"from": ["双鼠"], "to": "双输", "confidence": "context", "note": "需看上下文"}
+      ]
+    },
+    {
+      "id": "academic",
+      "label": "学术人名 / 术语(科普、对谈类高发)",
+      "corrections": [
+        {"from": ["维德根斯坦", "维德克斯坦", "维德根兰", "维特兰", "韦德格斯坦", "维德根坂"], "to": "维特根斯坦", "confidence": "high", "note": "哲学家"},
+        {"from": ["埃斯坦"], "to": "爱因斯坦", "confidence": "high", "note": "物理学家"},
+        {"from": ["格德尔"], "to": "哥德尔", "confidence": "high", "note": "逻辑学家"},
+        {"from": ["图林"], "to": "图灵", "confidence": "high", "note": "计算机科学家"},
+        {"from": ["福勒伊德"], "to": "弗洛伊德", "confidence": "high", "note": "心理学家"},
+        {"from": ["杨乐坤"], "to": "杨立昆", "confidence": "high", "note": "Yann LeCun"},
+        {"from": ["索拉迪"], "to": "苏格拉底", "confidence": "high", "note": "哲学家"},
+        {"from": ["天狱"], "to": "天域", "confidence": "context", "note": "节目名, 音译"},
+        {"from": ["天公"], "to": "天宫", "confidence": "context", "note": "空间站, 需看上下文"},
+        {"from": ["清厚大学"], "to": "清华大学", "confidence": "high", "note": "校名"},
+        {"from": ["常庭教授", "常聘教授"], "to": "长聘教授", "confidence": "high", "note": "教职制度"},
+        {"from": ["高刺分布"], "to": "高斯分布", "confidence": "high", "note": "统计学"},
+        {"from": ["政態分布", "正態分布"], "to": "正态分布", "confidence": "high", "note": "统计学"},
+        {"from": ["可减严事实", "科检验事实", "可检验实施"], "to": "可检验事实", "confidence": "high", "note": "科学哲学"},
+        {"from": ["陳書", "陳數", "陈数"], "to": "陈述", "confidence": "context", "note": "需看上下文"},
+        {"from": ["超業", "超厌"], "to": "超验", "confidence": "high", "note": "哲学"},
+        {"from": ["莫会的知识", "莫辉的知识"], "to": "默会知识", "confidence": "high", "note": "tacit knowledge"},
+        {"from": ["奇异"], "to": "歧义", "confidence": "context", "note": "数学语境下'奇异'本是对的, 不可自动替换"},
+        {"from": ["权势"], "to": "诠释", "confidence": "context", "note": "其他语境下可能是'权势', 不可自动替换"},
+        {"from": ["品用", "屏用", "平用", "匹用"], "to": "平庸", "confidence": "context", "note": "需看上下文"},
+        {"from": ["28定律"], "to": "二八定律", "confidence": "high", "note": "帕累托法则"},
+        {"from": ["咸侠"], "to": "闲暇", "confidence": "context", "note": "需看上下文"},
+        {"from": ["萌萌肚肚", "萌萌咚咚"], "to": "懵懵懂懂", "confidence": "high", "note": "成语"},
+        {"from": ["迁移军动"], "to": "情不自禁", "confidence": "high", "note": "成语"},
+        {"from": ["不能反映"], "to": "不能繁衍", "confidence": "context", "note": "需看上下文"},
+        {"from": ["升娃"], "to": "生娃", "confidence": "high", "note": "口语"},
+        {"from": ["莫過於"], "to": "莫过于", "confidence": "high", "note": "书面语"}
+      ]
+    }
+  ]
+}

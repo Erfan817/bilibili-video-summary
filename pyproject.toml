@@ -1,0 +1,43 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "bilibili-video-summary"
+version = "1.0.0"
+description = "B 站视频一键转写总结: bvs <链接> 全链路封装, 无 agent 也能出 transcript"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Erfan817" }]
+keywords = ["bilibili", "whisper", "transcript", "transcribe", "video-summary", "skill"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Topic :: Multimedia :: Sound/Audio :: Speech",
+    "Topic :: Utilities",
+]
+dependencies = [
+    "faster-whisper>=1.0",
+    "numpy",
+    "Pillow",
+    "zhconv",
+]
+
+[project.optional-dependencies]
+frames = ["PyAV"]
+ytdlp = ["yt-dlp"]
+mcp = ["mcp"]
+
+[project.scripts]
+bvs = "bvs_core.pipeline:main"
+
+[project.urls]
+Homepage = "https://github.com/Erfan817/bilibili-video-summary"
+Repository = "https://github.com/Erfan817/bilibili-video-summary"
+
+[tool.setuptools]
+packages = ["bvs_core"]
+
+[tool.setuptools.package-data]
+bvs_core = ["corrections.json"]

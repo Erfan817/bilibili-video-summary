@@ -1,0 +1,16 @@
+# 核心转写
+faster-whisper>=1.0
+numpy
+Pillow
+
+# 繁->简归一(可选但建议): Whisper 中文常混出繁体字
+zhconv
+
+# 画面模式(可选)
+PyAV
+
+# 多平台后端(可选): 非 B 站链接走 yt-dlp
+yt-dlp
+
+# MCP server(可选): mcp_server.py
+mcp
